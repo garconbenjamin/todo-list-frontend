@@ -1,28 +1,3 @@
-## Markdown improvements for your README:
-
-**1. Headers:**
-
-- Add a `### Technologies Used` section before the `Contributing` section.
-
-**2. Lists:**
-
-- Convert the `Usage` scripts into a bulleted list for better readability.
-- Make the `Technologies Used` list a bulleted list under the `### Technologies Used` section.
-
-**3. Code blocks:**
-
-- Wrap the `npm` commands in backticks for proper code formatting.
-
-**4. Links:**
-
-- Use link syntax for the `TodoList Backend: https://github.com/garconbenjamin/todo-list-backend` reference.
-
-**5. Emphasis:**
-
-- Consider using bold or italics for important keywords or phrases.
-
-**Here's the revised README with the suggested changes:**
-
 # TodoList Frontend
 
 ## Overview
@@ -52,10 +27,6 @@ cd todo-list-frontend
 ```bash
 npm install
 ```
-
-## Configuration
-
-Make sure to configure the app to connect to your deployed backend. Open the `src/apollo.ts` file and update the `uri` field with the appropriate URL:
 
 ## Usage
 
