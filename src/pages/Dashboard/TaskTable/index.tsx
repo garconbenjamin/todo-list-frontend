@@ -4,7 +4,7 @@ import { ReloadOutlined } from "@ant-design/icons";
 import { CaretRightFilled, CaretDownFilled } from "@ant-design/icons";
 import { useQuery } from "@apollo/client";
 import type { TableColumnsType } from "antd";
-import { Button, Space, Table, Col, Row, Spin } from "antd";
+import { Button, Space, Table, Spin } from "antd";
 import dayjs, { Dayjs } from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
 import { groupBy } from "lodash";

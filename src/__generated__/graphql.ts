@@ -32,18 +32,11 @@ export type CreateUserInput = {
   password: Scalars['String']['input'];
 };
 
-export type FollowTaskInput = {
-  taskId: Scalars['Int']['input'];
-  userId: Scalars['Int']['input'];
-};
-
 export type Mutation = {
   __typename?: 'Mutation';
   createTask: Task;
   createUser: Scalars['String']['output'];
-  followTask: TaskFollower;
   removeTask: Task;
-  unfollowTask?: Maybe<Scalars['String']['output']>;
   updateTask: Scalars['String']['output'];
 };
 
@@ -58,18 +51,8 @@ export type MutationCreateUserArgs = {
 };
 
 
-export type MutationFollowTaskArgs = {
-  followTaskInput: FollowTaskInput;
-};
-
-
 export type MutationRemoveTaskArgs = {
   id: Scalars['Int']['input'];
-};
-
-
-export type MutationUnfollowTaskArgs = {
-  unfollowTaskInput: FollowTaskInput;
 };
 
 
@@ -122,7 +105,6 @@ export type Task = {
   dueTime?: Maybe<Scalars['String']['output']>;
   follower?: Maybe<User>;
   followerId?: Maybe<Scalars['Float']['output']>;
-  followers?: Maybe<Array<TaskFollower>>;
   groupId?: Maybe<Scalars['Float']['output']>;
   id?: Maybe<Scalars['Float']['output']>;
   parentId?: Maybe<Scalars['Float']['output']>;
@@ -131,15 +113,6 @@ export type Task = {
   title?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['String']['output']>;
   updatedBy?: Maybe<Scalars['Float']['output']>;
-};
-
-export type TaskFollower = {
-  __typename?: 'TaskFollower';
-  createdAt?: Maybe<Scalars['String']['output']>;
-  id?: Maybe<Scalars['Float']['output']>;
-  taskId?: Maybe<Scalars['Float']['output']>;
-  updatedAt?: Maybe<Scalars['String']['output']>;
-  userId?: Maybe<Scalars['Float']['output']>;
 };
 
 export type TaskLog = {
@@ -185,20 +158,6 @@ export type GetAllTasksByGroupQueryVariables = Exact<{
 
 export type GetAllTasksByGroupQuery = { __typename?: 'Query', getAllTasksByGroup: Array<{ __typename?: 'Task', id?: number | null, title?: string | null, description?: string | null, startTime?: string | null, dueTime?: string | null, creatorId?: number | null, groupId?: number | null, parentId?: number | null, createdAt?: string | null, status?: number | null, creator?: { __typename?: 'User', id: number, name: string } | null, follower?: { __typename?: 'User', id: number, name: string } | null, assignee?: { __typename?: 'User', id: number, name: string } | null }> };
 
-export type FollowTaskMutationVariables = Exact<{
-  input: FollowTaskInput;
-}>;
-
-
-export type FollowTaskMutation = { __typename?: 'Mutation', followTask: { __typename?: 'TaskFollower', id?: number | null } };
-
-export type UnfollowTaskMutationVariables = Exact<{
-  input: FollowTaskInput;
-}>;
-
-
-export type UnfollowTaskMutation = { __typename?: 'Mutation', unfollowTask?: string | null };
-
 export type CreateTaskMutationVariables = Exact<{
   input: CreateTaskInput;
 }>;
@@ -243,8 +202,6 @@ export type UserQuery = { __typename?: 'Query', user: { __typename?: 'User', id:
 
 
 export const GetAllTasksByGroupDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getAllTasksByGroup"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"groupId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getAllTasksByGroup"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"groupId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"groupId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"startTime"}},{"kind":"Field","name":{"kind":"Name","value":"dueTime"}},{"kind":"Field","name":{"kind":"Name","value":"creatorId"}},{"kind":"Field","name":{"kind":"Name","value":"creator"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"groupId"}},{"kind":"Field","name":{"kind":"Name","value":"parentId"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"follower"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"assignee"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]} as unknown as DocumentNode<GetAllTasksByGroupQuery, GetAllTasksByGroupQueryVariables>;
-export const FollowTaskDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"followTask"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"FollowTaskInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"followTask"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"followTaskInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<FollowTaskMutation, FollowTaskMutationVariables>;
-export const UnfollowTaskDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"unfollowTask"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"FollowTaskInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"unfollowTask"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"unfollowTaskInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<UnfollowTaskMutation, UnfollowTaskMutationVariables>;
 export const CreateTaskDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createTask"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateTaskInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createTask"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"createTaskInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<CreateTaskMutation, CreateTaskMutationVariables>;
 export const UpdateTaskDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateTask"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateTaskInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateTask"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"updateTaskInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}]}]}}]} as unknown as DocumentNode<UpdateTaskMutation, UpdateTaskMutationVariables>;
 export const GetTaskLogsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getTaskLogs"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"taskId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"taskLogs"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"taskId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"taskId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"taskId"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"action"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]}}]} as unknown as DocumentNode<GetTaskLogsQuery, GetTaskLogsQueryVariables>;

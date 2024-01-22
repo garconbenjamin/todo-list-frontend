@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 import Auth from "./pages/Auth";
-import "./App.css";
 import Dashboard from "./pages/Dashboard";
 import ProtectedRoutes from "./pages/ProtectedRoutes";
 import { useAppSelector } from "./redux/hooks";

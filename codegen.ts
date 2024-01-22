@@ -1,8 +1,9 @@
 import { CodegenConfig } from "@graphql-codegen/cli";
 
+import { BACKEND_URL } from "./src/constant";
+
 const config: CodegenConfig = {
-  schema: "http://localhost:3000/graphql",
-  // this assumes that all your source files are in a top-level `src/` directory - you might need to adjust this to your file structure
+  schema: BACKEND_URL + "/graphql",
   documents: ["src/**/*.{ts,tsx}"],
   generates: {
     "./src/__generated__/": {

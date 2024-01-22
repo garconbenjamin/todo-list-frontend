@@ -1,30 +1,114 @@
-# React + TypeScript + Vite
+## Markdown improvements for your README:
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**1. Headers:**
 
-Currently, two official plugins are available:
+- Add a `### Technologies Used` section before the `Contributing` section.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+**2. Lists:**
 
-## Expanding the ESLint configuration
+- Convert the `Usage` scripts into a bulleted list for better readability.
+- Make the `Technologies Used` list a bulleted list under the `### Technologies Used` section.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+**3. Code blocks:**
 
-- Configure the top-level `parserOptions` property like this:
+- Wrap the `npm` commands in backticks for proper code formatting.
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+**4. Links:**
+
+- Use link syntax for the `TodoList Backend: https://github.com/garconbenjamin/todo-list-backend` reference.
+
+**5. Emphasis:**
+
+- Consider using bold or italics for important keywords or phrases.
+
+**Here's the revised README with the suggested changes:**
+
+# TodoList Frontend
+
+## Overview
+
+This TodoList frontend is a task management application built using React, Vite, Apollo Client, TypeScript, and Redux. It allows users to create, update, and delete tasks, as well as mark them as completed.
+
+## Getting Started
+
+Before running the app, ensure that you have set up and deployed the TodoList Backend: [https://github.com/garconbenjamin/todo-list-backend](https://github.com/garconbenjamin/todo-list-backend). Follow the instructions in the backend repository to deploy the localhost database and backend.
+
+## Installation
+
+1. Clone this repository to your local machine:
+
+```bash
+git clone https://github.com/garconbenjamin/todo-list-frontend.git
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+2. Navigate to the project directory:
+
+```bash
+cd todo-list-frontend
+```
+
+3. Install dependencies:
+
+```bash
+npm install
+```
+
+## Configuration
+
+Make sure to configure the app to connect to your deployed backend. Open the `src/apollo.ts` file and update the `uri` field with the appropriate URL:
+
+## Usage
+
+- Start the development server:
+
+```bash
+npm run dev
+```
+
+- Access the TodoList app in your browser at http://localhost:5173.
+
+- Build the app for production:
+
+```bash
+npm run build
+```
+
+- Lint the code:
+
+```bash
+npm run lint
+```
+
+- Preview the production build:
+
+```bash
+npm run preview
+```
+
+- Compile GraphQL codegen:
+
+```bash
+npm run compile
+```
+
+- Watch for GraphQL codegen changes:
+
+```bash
+npm run watch
+```
+
+## Technologies Used
+
+- React: A JavaScript library for building user interfaces.
+- Vite: A fast build tool that supports modern web development workflows.
+- Apollo Client: A fully-featured caching GraphQL client for React.
+- TypeScript: A superset of JavaScript that adds static typing.
+- Redux: A predictable state container for JavaScript applications.
+
+## Contributing
+
+Feel free to contribute to the development of this TodoList app. Create a pull request with your changes, and we'll review it.
+
+## License
+
+This TodoList app is open-source and available under the MIT License.

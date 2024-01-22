@@ -30,18 +30,6 @@ const getAllTasksByGroupGQL = gql(`
   }
 `);
 
-const followTaskGQL = gql(`
-  mutation followTask($input: FollowTaskInput!) {
-    followTask(followTaskInput: $input) {
-      id
-    }
-  }
-`);
-const unflollowTaskGQL = gql(`
-  mutation unfollowTask($input: FollowTaskInput!) {
-    unfollowTask(unfollowTaskInput: $input) 
-  }
-`);
 const createTaskGQL = gql(`
   mutation createTask($input: CreateTaskInput!) {
     createTask(createTaskInput: $input) {
@@ -72,11 +60,4 @@ const getTaskLogsGQL = gql(`
   }
 `);
 
-export {
-  updateTaskGQL,
-  createTaskGQL,
-  getAllTasksByGroupGQL,
-  followTaskGQL,
-  unflollowTaskGQL,
-  getTaskLogsGQL,
-};
+export { updateTaskGQL, createTaskGQL, getAllTasksByGroupGQL, getTaskLogsGQL };

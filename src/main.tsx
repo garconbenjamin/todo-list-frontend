@@ -5,12 +5,15 @@ import { loadErrorMessages, loadDevMessages } from "@apollo/client/dev";
 import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
 
+import { BACKEND_URL } from "@/constant";
+import "normalizecss/normalize.css";
+
 import App from "./App.tsx";
 import { store, PersistGate, persistor } from "./redux/store";
-import "./index.css";
+
 
 const client = new ApolloClient({
-  uri: "http://localhost:3000/graphql",
+  uri: `${BACKEND_URL}/graphql`,
   cache: new InMemoryCache(),
 });
 

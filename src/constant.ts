@@ -17,3 +17,4 @@ export const STATUS_MAP: Record<string, number> = {
   IN_PROGRESS: 2,
   COMPLETED: 3,
 };
+export const BACKEND_URL = "http://localhost:3000";
