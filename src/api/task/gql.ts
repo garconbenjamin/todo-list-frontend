@@ -5,7 +5,6 @@ const getAllTasksByGroupGQL = gql(`
     getAllTasksByGroup(groupId: $groupId) {
       id
       title
-      description
       startTime
       dueTime
       creatorId

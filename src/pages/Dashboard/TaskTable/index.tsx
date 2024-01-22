@@ -50,6 +50,7 @@ function TaskTable() {
           follower,
           parentId,
           startTime,
+          description,
         } = task;
         task;
         return {
@@ -62,6 +63,7 @@ function TaskTable() {
           assignee: { id: assignee?.id, name: assignee?.name },
           follower: { id: follower?.id, name: follower?.name },
           status: status!,
+          description: description || "",
           parentId: parentId || undefined,
         };
       };
@@ -91,6 +93,7 @@ function TaskTable() {
       dataIndex: "title",
       key: "title",
       fixed: "left",
+      ellipsis: true,
       sorter: (a, b) => a.title.localeCompare(b.title),
       render: (value: string, record) => (
         <TitleCell value={value} record={record} />
@@ -209,9 +212,6 @@ function TaskTable() {
             scroll={{
               y: "calc(100vh - 200px)",
               x: "calc(100vw - 100px)",
-            }}
-            rowClassName={(record) => {
-              return record.parentId === undefined ? "parent-row" : "child-row";
             }}
             expandable={{
               defaultExpandAllRows: true,
