@@ -10,7 +10,7 @@ function DateCell(props: { value: string; taskId: number; name: string }) {
   const { value, taskId, name } = props;
   const [editing, setEditing] = useState(false);
 
-  const [updateTask] = useUpdateTask();
+  const [updateTask] = useUpdateTask({ taskId });
   const handleUpdateTask = (date: string | null) => {
     updateTask({
       variables: {

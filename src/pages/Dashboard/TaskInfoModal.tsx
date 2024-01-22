@@ -94,12 +94,15 @@ function TaskInfoModal(props: TaskInfoModalProps) {
   const [messageApi, contextHolder] = message.useMessage();
   const { id: taskId, title, startTime, dueTime, description } = task;
   const [updateTask] = useUpdateTask({
-    onCompleted: () => {
-      closeModal();
+    options: {
+      onCompleted: () => {
+        closeModal();
+      },
+      onError: (err) => {
+        messageApi.error(err.message);
+      },
     },
-    onError: (err) => {
-      messageApi.error(err.message);
-    },
+    taskId: task.id,
   });
   const [modalOpen, setModalOpen] = useState(false);
   const [form] = Form.useForm();

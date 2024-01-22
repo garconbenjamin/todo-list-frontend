@@ -17,7 +17,10 @@ function AssigneeSelect(props: {
   const { id, name } = value;
   const [isEditing, setIsEditing] = useState(false);
   const { data: groupUsers } = useGroupUsers();
-  const [updateTask] = useUpdateTask();
+  const [updateTask] = useUpdateTask({
+    taskId: record.id,
+    parentId: record.parentId,
+  });
 
   const handleAssignTask = (taskId: number, userId: number | null) => {
     updateTask({

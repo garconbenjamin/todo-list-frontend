@@ -14,7 +14,10 @@ function StatusSelect(props: { value?: number; record: DataType }) {
 
   const [isEditing, setIsEditing] = useState(false);
 
-  const [updateTask] = useUpdateTask();
+  const [updateTask] = useUpdateTask({
+    taskId: record.id,
+    parentId: record.parentId,
+  });
 
   const handleUpdateStatus = (taskId: number, status: number) => {
     updateTask({
@@ -28,8 +31,6 @@ function StatusSelect(props: { value?: number; record: DataType }) {
     setIsEditing(false);
   };
 
-
-  
   return isEditing ? (
     <Select
       onSelect={(status) => handleUpdateStatus(record.id, status)}
