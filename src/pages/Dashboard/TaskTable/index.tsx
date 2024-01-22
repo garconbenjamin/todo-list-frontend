@@ -1,54 +1,52 @@
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 
 import { ReloadOutlined } from "@ant-design/icons";
 import { CaretRightFilled, CaretDownFilled } from "@ant-design/icons";
 import { useQuery } from "@apollo/client";
-import type { TableColumnsType, TableProps } from "antd";
-import { Button, Space, Table, Col, Row } from "antd";
+import type { TableColumnsType } from "antd";
+import { Button, Space, Table, Col, Row, Spin } from "antd";
+import dayjs, { Dayjs } from "dayjs";
+import isBetween from "dayjs/plugin/isBetween";
 import { groupBy } from "lodash";
 
 import { getAllTasksByGroupGQL } from "@/api/task/gql";
+import { useGroupUsers } from "@/api/user";
 import CreateNewTaskModal from "@/pages/Dashboard/CreateNewTaskModal";
+import TaskInfoModal from "@/pages/Dashboard/TaskInfoModal";
 import { useAppSelector } from "@/redux/hooks";
 
 import {
   DateCell,
-  FollowButton,
   TitleCell,
   NameBasic,
   AssigneeSelect,
+  StatusSelect,
+  FilterDateRange,
 } from "./Cells";
-import type { DataType } from "./type";
-
-type OnChange = NonNullable<TableProps<DataType>["onChange"]>;
-type Filters = Parameters<OnChange>[1];
-
-type GetSingle<T> = T extends (infer U)[] ? U : never;
-type Sorts = GetSingle<Parameters<OnChange>[2]>;
+import type { DataType } from "../type";
+dayjs.extend(isBetween);
 
 function TaskTable() {
-  const [filteredInfo, setFilteredInfo] = useState<Filters>({});
-  const [sortedInfo, setSortedInfo] = useState<Sorts>({});
-  const [tableData, setTableData] = useState<DataType[]>([]);
-  const [hoveredRow, setHoveredRow] = useState<number | null>(null);
   const user = useAppSelector((state) => state.user);
-
-  const { data, refetch } = useQuery(getAllTasksByGroupGQL, {
+  const { data: users } = useGroupUsers();
+  const { data, refetch, loading } = useQuery(getAllTasksByGroupGQL, {
     variables: { groupId: user.groupId! },
   });
 
-  useEffect(() => {
+  const tableData = useMemo(() => {
+    if (!data || !data.getAllTasksByGroup) return [];
+
     if (data?.getAllTasksByGroup) {
       const firstTask = data?.getAllTasksByGroup[0];
       const dataConvertor = (task: typeof firstTask) => {
         const {
           id,
           title,
-
+          status,
           dueTime,
           creator,
           assignee,
-          followers,
+          follower,
           parentId,
           startTime,
         } = task;
@@ -59,13 +57,11 @@ function TaskTable() {
           title: title || "",
           startTime: startTime || "",
           dueTime: dueTime || "",
-          creator: creator?.name || "",
-          assignee: assignee?.name,
-          status: "",
+          creator: { id: creator!.id, name: creator!.name },
+          assignee: { id: assignee?.id, name: assignee?.name },
+          follower: { id: follower?.id, name: follower?.name },
+          status: status!,
           parentId: parentId || undefined,
-          follow:
-            followers?.some((follower) => follower.userId === user.id!) ||
-            false,
         };
       };
       const { getAllTasksByGroup } = data;
@@ -75,27 +71,18 @@ function TaskTable() {
         ...dataConvertor(task),
         children: groupedTasks[task.id!]?.map(dataConvertor),
       }));
-      setTableData(newTableData);
+      return newTableData || [];
     }
-  }, [data, user.id]);
+  }, [data]);
 
   const columns: TableColumnsType<DataType> = [
-    {
-      title: "Follow",
-      dataIndex: "follow",
-      key: "follow",
-
-      fixed: "left",
-      render: (value, record) => (
-        <FollowButton value={value} record={record} hoveredRow={hoveredRow} />
-      ),
-    },
     {
       title: "ID",
       dataIndex: "id",
       align: "center",
       key: "id",
       fixed: "left",
+      defaultSortOrder: "ascend",
       sorter: (a, b) => a.id - b.id,
     },
     {
@@ -105,7 +92,7 @@ function TaskTable() {
       fixed: "left",
       sorter: (a, b) => a.title.localeCompare(b.title),
       render: (value: string, record) => (
-        <TitleCell value={value} record={record} hoveredRow={hoveredRow} />
+        <TitleCell value={value} record={record} />
       ),
     },
     {
@@ -121,6 +108,17 @@ function TaskTable() {
       title: "Due Time",
       dataIndex: "dueTime",
       key: "dueTime",
+      filterDropdown: (props) => <FilterDateRange {...props} />,
+      onFilter: (value, record) => {
+        const [startDate, endDate] = value as unknown as [
+          Dayjs | null,
+          Dayjs | null
+        ];
+        return dayjs(+record.dueTime).isBetween(
+          dayjs(startDate),
+          dayjs(endDate)
+        );
+      },
       sorter: (a, b) => +a.dueTime - +b.dueTime,
       render: (value, record) => (
         <DateCell value={value} taskId={record.id} name="dueTime" />
@@ -130,38 +128,66 @@ function TaskTable() {
       title: "Creator",
       dataIndex: "creator",
       key: "creator",
-      render: (value) => <NameBasic value={value} />,
+      filters: users?.getUsersByGroup.map((user) => ({
+        text: user.name,
+        value: user.id,
+      })),
+      onFilter: (value, record) => record.creator?.id === value,
+      render: (value) => {
+        return <NameBasic value={value.name} />;
+      },
     },
     {
       title: "Assignee",
       dataIndex: "assignee",
       key: "assignee",
-      render: (value, record) => (
-        <AssigneeSelect value={value} record={record} />
-      ),
+      filters: users?.getUsersByGroup.map((user) => ({
+        text: user.name,
+        value: user.id,
+      })),
+      onFilter: (value, record) => record.assignee?.id === value,
+
+      render: (value, record) => {
+        return (
+          <AssigneeSelect
+            fieldName="assigneeId"
+            value={value}
+            record={record}
+          />
+        );
+      },
+    },
+    {
+      title: "Follower",
+      dataIndex: "follower",
+      key: "follower",
+      render: (value, record) => {
+        return (
+          <AssigneeSelect
+            fieldName="followerId"
+            value={value}
+            record={record}
+          />
+        );
+      },
     },
     {
       title: "Status",
       dataIndex: "status",
       key: "status",
+      render: (value, record) => <StatusSelect value={value} record={record} />,
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => <TaskInfoModal task={record} />,
     },
   ];
 
   const refresh = () => {
     refetch();
   };
-  const handleMouseEnter = (record: DataType) => {
-    setHoveredRow(record.id);
-  };
 
-  const handleMouseLeave = () => {
-    setHoveredRow(null);
-  };
-
-  const onRow = (record: DataType) => ({
-    onMouseEnter: () => handleMouseEnter(record),
-    onMouseLeave: handleMouseLeave,
-  });
   return (
     <>
       <Row>
@@ -179,41 +205,48 @@ function TaskTable() {
         </Col>
       </Row>
 
-      <Table
-        columns={columns}
-        dataSource={tableData}
-        onRow={onRow}
-        scroll={{
-          y: "calc(100vh - 200px)",
-          x: "calc(100vw - 100px)",
-        }}
-        rowClassName={(record) => {
-          return record.parentId === undefined ? "parent-row" : "child-row";
-        }}
-        expandable={{
-          expandIcon: ({
-            expanded,
-            onExpand,
-            record,
-          }: {
-            expanded: boolean;
-            onExpand: (
-              record: DataType,
-              e: React.MouseEvent<HTMLElement, MouseEvent>
-            ) => void;
-            record: DataType;
-          }) =>
-            record?.children?.length && record.parentId === undefined ? (
-              expanded ? (
-                <CaretDownFilled onClick={(e) => onExpand(record, e)} />
-              ) : (
-                <CaretRightFilled onClick={(e) => onExpand(record, e)} />
-              )
-            ) : (
-              <></>
-            ),
-        }}
-      />
+      {loading ? (
+        <Spin />
+      ) : (
+        Boolean(tableData) && (
+          <Table
+            columns={columns}
+            dataSource={tableData}
+            scroll={{
+              y: "calc(100vh - 200px)",
+              x: "calc(100vw - 100px)",
+            }}
+            rowClassName={(record) => {
+              return record.parentId === undefined ? "parent-row" : "child-row";
+            }}
+            expandable={{
+              defaultExpandAllRows: true,
+              indentSize: 50,
+              expandIcon: ({
+                expanded,
+                onExpand,
+                record,
+              }: {
+                expanded: boolean;
+                onExpand: (
+                  record: DataType,
+                  e: React.MouseEvent<HTMLElement, MouseEvent>
+                ) => void;
+                record: DataType;
+              }) =>
+                record?.children?.length && record.parentId === undefined ? (
+                  expanded ? (
+                    <CaretDownFilled onClick={(e) => onExpand(record, e)} />
+                  ) : (
+                    <CaretRightFilled onClick={(e) => onExpand(record, e)} />
+                  )
+                ) : (
+                  <></>
+                ),
+            }}
+          />
+        )
+      )}
     </>
   );
 }

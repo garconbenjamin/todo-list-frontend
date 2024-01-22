@@ -18,6 +18,7 @@ type CreateTaskFieldType = {
 type CreateNewTaskModalProps = {
   trigger?: React.ReactNode;
   title?: string;
+  parentId?: number;
 };
 
 const Trigger = (
@@ -27,7 +28,7 @@ const Trigger = (
 );
 
 function CreateNewTaskModal(props: CreateNewTaskModalProps) {
-  const { trigger = Trigger, title = "New Task" } = props;
+  const { trigger = Trigger, title = "New Task", parentId } = props;
   const [messageApi, contextHolder] = message.useMessage();
   const [createTask] = useMutation(createTaskGQL, {
     onError: (error) => {
@@ -37,6 +38,7 @@ function CreateNewTaskModal(props: CreateNewTaskModalProps) {
       messageApi.success("Created task successfully");
       closeModal();
     },
+    refetchQueries: ["getAllTasksByGroup"],
   });
   const [modalOpen, setModalOpen] = useState(false);
   const [form] = Form.useForm();
@@ -52,6 +54,7 @@ function CreateNewTaskModal(props: CreateNewTaskModalProps) {
       variables: {
         input: {
           ...task,
+          parentId,
           creatorId: user.id!,
           groupId: user.groupId!,
         },

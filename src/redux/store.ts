@@ -23,7 +23,7 @@ const persistConfig = {
   storage,
   whitelist: ["user"],
 };
-const rootReducer = combineSlices(userSlice,taskSlice);
+const rootReducer = combineSlices(userSlice, taskSlice);
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export type RootState = ReturnType<typeof rootReducer>;

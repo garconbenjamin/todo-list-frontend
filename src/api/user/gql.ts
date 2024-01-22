@@ -19,4 +19,17 @@ const getUsersByGroupGQL = gql(/* GraphQL */ `
   }
 `);
 
-export { getUsersByGroupGQL, createUserGQL };
+const getUserByEmailGQL = gql(/* GraphQL */ `
+  query user($email: String!) {
+    user(email: $email) {
+      id
+      name
+      email
+      groupId
+      createdAt
+      updatedAt
+    }
+  }
+`);
+
+export { getUsersByGroupGQL, createUserGQL, getUserByEmailGQL };

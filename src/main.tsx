@@ -14,8 +14,10 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-loadDevMessages();
-loadErrorMessages();
+if (process.env.NODE_ENV !== "production") {
+  loadDevMessages();
+  loadErrorMessages();
+}
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

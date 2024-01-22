@@ -1,6 +1,14 @@
 import AssigneeSelect from "./AssigneeSelect";
 import DateCell from "./DateCell";
-import FollowButton from "./FollowButton";
+import FilterDateRange from "./FilterDateRange";
 import NameBasic from "./NameBasic";
+import StatusSelect from "./StatusSelect";
 import TitleCell from "./TitleCell";
-export { DateCell, FollowButton, TitleCell, NameBasic, AssigneeSelect };
+export {
+  DateCell,
+  TitleCell,
+  NameBasic,
+  AssigneeSelect,
+  StatusSelect,
+  FilterDateRange,
+};

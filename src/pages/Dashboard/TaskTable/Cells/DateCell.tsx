@@ -1,25 +1,16 @@
 import { useState } from "react";
 
 import { CalendarOutlined } from "@ant-design/icons";
-import { useMutation } from "@apollo/client";
 import { Button, Tag, DatePicker } from "antd";
 import dayjs from "dayjs";
 
-import { getAllTasksByGroupGQL, updateTaskGQL } from "@/api/task/gql";
-import { useAppSelector } from "@/redux/hooks";
+import { useUpdateTask } from "@/api/task";
 
 function DateCell(props: { value: string; taskId: number; name: string }) {
   const { value, taskId, name } = props;
   const [editing, setEditing] = useState(false);
-  const user = useAppSelector((state) => state.user);
-  const [updateTask] = useMutation(updateTaskGQL, {
-    refetchQueries: [
-      {
-        query: getAllTasksByGroupGQL,
-        variables: { groupId: user.groupId! },
-      },
-    ],
-  });
+
+  const [updateTask] = useUpdateTask();
   const handleUpdateTask = (date: string | null) => {
     updateTask({
       variables: {

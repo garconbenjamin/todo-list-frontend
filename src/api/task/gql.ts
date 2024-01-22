@@ -10,19 +10,21 @@ const getAllTasksByGroupGQL = gql(`
       dueTime
       creatorId
       creator{
+        id
         name
       }
       groupId
       parentId
       createdAt
-      followers{
+      description
+      follower{
         id
-        userId
+        name
       }
+      status
       assignee {
           id
           name
-        
       }
     }
   }
@@ -54,10 +56,27 @@ const updateTaskGQL = gql(`
   }
 `);
 
+const getTaskLogsGQL = gql(`
+  query getTaskLogs($taskId: Int!) {
+    taskLogs(taskId: $taskId) {
+      id
+      taskId
+      user{
+        name
+        email
+      }
+      status
+      action
+      createdAt
+    }
+  }
+`);
+
 export {
   updateTaskGQL,
   createTaskGQL,
   getAllTasksByGroupGQL,
   followTaskGQL,
   unflollowTaskGQL,
+  getTaskLogsGQL,
 };
