@@ -24,6 +24,7 @@ import {
   FilterDateRange,
 } from "./Cells";
 import type { DataType } from "../type";
+
 dayjs.extend(isBetween);
 
 function TaskTable() {
@@ -79,7 +80,7 @@ function TaskTable() {
     {
       title: "ID",
       dataIndex: "id",
-      align: "center",
+      align: "justify",
       key: "id",
       fixed: "left",
       defaultSortOrder: "ascend",
@@ -180,6 +181,7 @@ function TaskTable() {
     {
       title: "Action",
       key: "action",
+      fixed: "right",
       render: (_, record) => <TaskInfoModal task={record} />,
     },
   ];
@@ -190,20 +192,12 @@ function TaskTable() {
 
   return (
     <>
-      <Row>
-        <Col span={16}>
-          <Space style={{ marginBottom: 16 }}></Space>
-        </Col>
-
-        <Col span={8} style={{ justifyContent: "right" }}>
-          <Space style={{ justifyContent: "right" }}>
-            <Button icon={<ReloadOutlined />} onClick={refresh}>
-              Reload
-            </Button>
-            <CreateNewTaskModal />
-          </Space>
-        </Col>
-      </Row>
+      <Space style={{ display: "flex", justifyContent: "end", padding: 8 }}>
+        <Button icon={<ReloadOutlined />} onClick={refresh}>
+          Reload
+        </Button>
+        <CreateNewTaskModal />
+      </Space>
 
       {loading ? (
         <Spin />
@@ -235,11 +229,11 @@ function TaskTable() {
                 record: DataType;
               }) =>
                 record?.children?.length && record.parentId === undefined ? (
-                  expanded ? (
-                    <CaretDownFilled onClick={(e) => onExpand(record, e)} />
-                  ) : (
-                    <CaretRightFilled onClick={(e) => onExpand(record, e)} />
-                  )
+                  <Button
+                    icon={expanded ? <CaretDownFilled /> : <CaretRightFilled />}
+                    onClick={(e) => onExpand(record, e)}
+                    style={{ marginRight: 8 }}
+                  />
                 ) : (
                   <></>
                 ),
